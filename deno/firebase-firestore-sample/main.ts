@@ -7,7 +7,8 @@ addDoc,
   getDocs,
   getFirestore,
   doc,
-  setDoc
+  setDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 import {
   getAuth,
@@ -20,7 +21,7 @@ config();
 
 // Firebase Setup
 const firebaseConfig = JSON.parse(Deno.env.get("FIREBASE_APP_CONFIG") as string)
-const firebaseApp = initializeApp(firebaseConfig, "{firebase-application-name}");
+const firebaseApp = initializeApp(firebaseConfig, "hana-prod-api");
 const auth = getAuth(firebaseApp);
 const database = getFirestore(firebaseApp);
 
@@ -35,7 +36,7 @@ const userCredential = await signInWithEmailAndPassword(
 console.log("User signed in: ", userCredential.user.email);
 
 // Data specific configuration
-const collectionName = "{collection-name}"
+const collectionName = "{collection-name}/"
 
 const testCollection = collection(database, collectionName);
 
@@ -49,3 +50,6 @@ const documentId = "reference-id";
 const docRef = doc(database, collectionName, documentId);
 const data = { name: "John Doe", age: 30, email: "john.doe@example.com", };
 await setDoc(docRef, data);
+
+// Delete
+await deleteDoc()
