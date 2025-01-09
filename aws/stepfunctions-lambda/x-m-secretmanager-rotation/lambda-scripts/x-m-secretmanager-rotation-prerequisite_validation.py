@@ -1,5 +1,6 @@
 import json
 import boto3
+import pymssql
 
 def lambda_handler(event, context):
     print("x-m-secretmanager-rotation-prerequisite_validation is running")
@@ -42,7 +43,6 @@ def lambda_handler(event, context):
         test_result = test_secret(secret)
 
         if (test_result[1] == True):
-           
             secret_test_result.append({
                 'SecretName': secret['SecretName'],
                 'RowIssueFlag': False,
@@ -55,7 +55,6 @@ def lambda_handler(event, context):
                 'RowIssueFlag': True,
                 'ErrorMessage': test_result[2]
         })
-
 
     return {
         'TestRes': secret_test_result,
@@ -89,12 +88,16 @@ def get_secrets(prefix):
 
 # To Be Working On
 def test_secret(secret):
-    test_result = []
-    test_result_sample = {}
     try:
+        conn = pymssql.connect(server=secret.get('host'),
+                                user=secret.get('username'),
+                                password=secret.get('password'),
+                                port=secret.get('port'),
+                                database=secret.get('database_name'),
+                                login_timeout=1)
         return secret['SecretName'], True
-    except:
-        return secret['SecretName'], False, "ERROR MESSAGE"
+    except Exception as e:
+        return secret['SecretName'], False, repr(e)
 
 # Local Driver
 event = {
