@@ -97,6 +97,24 @@ def test_secret(secret):
                                 port=secret.get('port'),
                                 database=secret.get('database_name'),
                                 login_timeout=1)
+        
+        cursor = conn.cursor()
+
+        check_permission_query = f"""
+        SELECT 
+            CASE 
+                WHEN HAS_PERMS_BY_NAME('{secret.get('username')}', 'LOGIN', 'ALTER') = 1 THEN 'YES'
+                ELSE 'NO'
+            END AS CanChangePassword;
+        """
+        cursor.execute(check_permission_query)
+        
+        result = cursor.fetchone()
+        can_change_password = result[0]
+
+        if (can_change_password == False):
+            return secret['SecretName'], False, "User cannot change it's own password"
+
         return secret['SecretName'], True
     except Exception as e:
         return secret['SecretName'], False, repr(e)
