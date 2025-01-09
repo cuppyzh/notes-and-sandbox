@@ -57,7 +57,7 @@ def lambda_handler(event, context):
         })
 
     return {
-        'TestRes': secret_test_result,
+        'Result': secret_test_result,
         'ProceedToNextStep': proceedToNextStep,
         'PrecheckOnly': preCheck
     }
@@ -78,15 +78,17 @@ def get_secrets(prefix):
 
             get_secret_value_response = secretsmanager_client.get_secret_value(SecretId=secret_name)
             secret_json = json.loads(get_secret_value_response['SecretString'])
-            secret_json['SecretName'] = secret_name;
 
+            if (secret_json.get('host') == None):
+                continue
+
+            secret_json['SecretName'] = secret_name
             secrets.append(secret_json)
 
         return secrets
     except Exception as e:
         return None
 
-# To Be Working On
 def test_secret(secret):
     try:
         conn = pymssql.connect(server=secret.get('host'),
