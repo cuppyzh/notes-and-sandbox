@@ -13,15 +13,13 @@ def lambda_handler(event, context):
 
         if (test_result[1] == True):
             secret_test_result.append({
-                'SecretName': secret['SecretName'],
-                'RowIssueFlag': False,
+                'SecretName': secret['SecretName']
             })
             continue
         
         proceedToNextStep = False
         secret_test_result.append({
                 'SecretName': secret['SecretName'],
-                'RowIssueFlag': True,
                 'ErrorMessage': test_result[2]
         })
 
