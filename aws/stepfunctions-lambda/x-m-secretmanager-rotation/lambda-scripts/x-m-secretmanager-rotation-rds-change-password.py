@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     secret_test_result = []
     proceedToNextStep = True
 
-    for secret in event['TestResult']:
+    for secret in event['Result']:
         
         test_result = change_sql_user_password(secret['SecretName'])
 
@@ -24,7 +24,7 @@ def lambda_handler(event, context):
         })
 
     return {
-        'Result': event['TestResult'],
+        'Result': event['Result'],
         'ProceedToNextStep': proceedToNextStep
     }
 
@@ -69,7 +69,7 @@ def change_sql_user_password(secret_name):
 
 # Local Driver
 event = {
-    'TestResult': [{
+    'Result': [{
         'SecretName':'sm-mwb-l-m-sitecore_collection'
     }],
     'PrecheckOnly': False

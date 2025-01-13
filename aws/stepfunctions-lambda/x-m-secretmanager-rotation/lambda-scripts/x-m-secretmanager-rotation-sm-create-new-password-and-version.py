@@ -8,7 +8,7 @@ def lambda_handler(event, context):
     error_result = []
     proceedToNextStep = True
 
-    for secret in event['TestResult']:
+    for secret in event['Result']:
         try:
             create_new_secret_version(secret['SecretName'])
         except Exception as e:
@@ -16,7 +16,7 @@ def lambda_handler(event, context):
             error_result.append(repr(e))
 
     return {
-        'Result': event['TestResult'],
+        'Result': event['Result'],
         'ProceedToNextStep': proceedToNextStep,
         'ErrorMessage': error_result
     }

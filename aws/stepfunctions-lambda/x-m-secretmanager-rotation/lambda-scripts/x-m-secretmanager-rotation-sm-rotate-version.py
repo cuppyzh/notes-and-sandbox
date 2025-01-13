@@ -4,7 +4,7 @@ def lambda_handler(event, context):
     secret_test_result = []
     proceedToNextStep = True
 
-    for secret in event['TestResult']:
+    for secret in event['Result']:
         test_result = rotate_secret_versions(secret['SecretName'])
 
         if (test_result[1] == True):
@@ -67,7 +67,7 @@ def rotate_secret_versions(secret):
 
 # Local Driver
 event = {
-    'TestResult': [{
+    'Result': [{
         'SecretName':'sm-mwb-l-m-sitecore_collection'
     }],
     'PrecheckOnly': False
